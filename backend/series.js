@@ -245,7 +245,6 @@ router.get('/getEpisodes/:seriesname/', function (req, res) {
                         });
                         responseObject.message = "ok";
                         responseObject.code = "0";
-                        responseObject.count = episodes.length;
                         responseObject.episodes = episodes;
                         res.send(responseObject);
 

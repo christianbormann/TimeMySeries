@@ -86,9 +86,9 @@ router.get('/:seriesname', function (req, res) {
 
 
                                             /* Add numbers from internet result */
-                                            console.log(bodyEpisodes.episodes.length);
                                             var searchresult = bodyEpisodes.episodes.find(function(episodeitem) {
-                                                return episodeitem.name == episodename;
+                                                return episodeitem.name == episodename 
+                                                    || episodeitem.name == episodename.replace(/\s?\((\d*)\)/g, ", Teil $1"); // Trauma (2) --> Trauma, Teil 2
                                             });
                                             
                                             if(searchresult) {
