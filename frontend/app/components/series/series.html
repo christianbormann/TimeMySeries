@@ -1,0 +1,57 @@
+<div class="col-sm-12">
+	<div class="text-right">
+		<button type="button" class="btn btn-primary btn-sm" ng-click="addSeries()"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Serie hinzuf&uuml;gen</button>
+	</div>
+	<div>
+		&nbsp;
+	</div>
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>
+					Name
+				</th>
+				<th class="text-center"> 
+					Ab Staffel
+				</th>
+				<th class="text-center">
+					EPG Suche
+				</th>
+				<th class="text-center">
+					L&ouml;schen
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="seriesitem in series">
+				<td>
+					<input type="text" class="form-control input-sm" ng-model="seriesitem.name" placeholder="Serienname" uib-typeahead="name for name in getEPGNames($viewValue)" typeahead-loading="loadingLocations" typeahead-no-results="noResults" class="form-control">
+					<div ng-show="loadingLocations">
+						<i class="fa fa-search"></i>&nbsp;&nbsp;Suche l&auml;uft...
+					</div>
+					<div ng-show="noResults">
+						<i class="fa fa-times"></i>&nbsp;&nbsp;Keine Serien gefunden
+					</div>
+				</td>
+				<td class="text-center"> 
+					<select class="form-control input-sm" ng-model="seriesitem.fromseason">
+						<option ng-repeat="seasonnumber in [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]">{{seasonnumber}}</option>
+					</select>
+				</td>
+				<td class="text-center" style="vertical-align: middle;"> 
+					<a ng-href="#/events/{{seriesitem.name}}"><i class="fa fa-search" aria-hidden="true" style="cursor: pointer;"></i></a>
+				</td>
+				<td class="text-center" style="vertical-align: middle;">
+					<i class="fa fa-trash-o" aria-hidden="true"></i>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+	<div class="text-right">
+		<button type="button" class="btn btn-warning btn-sm" ng-click="saveSeries();"><i class="fa fa-save" aria-hidden="true"></i>&nbsp;&nbsp;Speichern</button>
+	</div>
+	<div>
+		&nbsp;
+	</div>
+</div>
+

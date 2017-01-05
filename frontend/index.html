@@ -1,0 +1,60 @@
+ <!DOCTYPE html>
+<html>
+	<head>
+		<title>TimeMySeries</title>
+		<meta charset="UTF-8" />
+		<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+		<meta name="author" content="Christian Bormann" />
+		<meta name="description" content="" />
+		<meta name="keywords" content="" />
+
+		<link href="assets/css/bootstrap.min.css" rel="stylesheet" />
+		<link href="assets/css/font-awesome.min.css" rel="stylesheet" />
+		<link href="assets/css/angular-ui-notification.min.css" rel="stylesheet" />
+		<link href="assets/css/angular-ui-tree.min.css" rel="stylesheet" />
+		<link href="assets/css/style.css" rel="stylesheet" />
+		
+		<!-- jQuery -->
+		<script src="assets/js/jquery-1.11.2.min.js"></script>
+
+		<!-- Bootstrap -->
+		<script src="assets/js/bootstrap.min.js"></script>
+
+		<!-- Angular und Module-->
+		<script src="assets/js/angular.min.js"></script>
+		<script src="assets/js/angular-ui-router.min.js"></script>
+		<script src="assets/js/angular-ui-notification.min.js"></script>
+		<script src="assets/js/angular-ui-tree.min.js"></script>
+		<script src="assets/js/ui-router-history.js"></script>
+
+		<!-- Angular Bootstrap-->
+		<script src="assets/js/ui-bootstrap-tpls-0.14.3.min.js"></script>
+
+		<!-- Angular Application-->
+		<script src="app/app.js"></script>
+		
+		<!-- Angular Application - Directives -->
+		<script src="app/shared/navigation/navigationDirective.js"></script>
+		
+		<!-- Angular Application - Components -->
+		<script src="app/components/series/seriesController.js"></script>
+		<script src="app/components/timer/timerController.js"></script>
+		<script src="app/components/services/servicesController.js"></script>
+		<script src="app/components/events/eventsController.js"></script>
+	</head>
+	<body ng-app="app">
+		<navigation></navigation>
+		<div class="container">		
+			<!--<header ng-include="'app/shared/navigation.html'"></header>-->
+			<div ui-view></div>
+			<!--<footer ng-include="'app/shared/footer.html'"></footer>-->
+		</div>
+		<footer class="footer">
+			<div class="container">
+				<div class="col-sm-12">
+					<p class="muted credit text-right"><small>&copy; 2016 Sizco (<a href="mailto:info@sizco.de">info@sizco.de</a>)</small></p>
+				</div>
+			</div>
+		</footer>
+	</body>
+</html>

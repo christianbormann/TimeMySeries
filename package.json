@@ -1,0 +1,18 @@
+{
+  "name": "TimeMySeries",
+  "version": "1.0.0",
+  "description": "Automaticly creation of timers on VU+",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Christian Bormann",
+  "license": "ISC",
+  "dependencies": {
+    "async": "^2.1.4",
+    "body-parser": "^1.15.2",
+    "express": "^4.14.0",
+    "node-tvdb": "^3.0.0",
+    "sqlite3": "^3.1.8"
+  }
+}

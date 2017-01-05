@@ -1,0 +1,22 @@
+<div class="col-sm-4 col-sm-offset-1">
+	<table class="table table-condensed">
+		<tbody>
+			<tr ng-repeat="serviceitem in services.slice(0, services.length / 2)">
+				<td ng-class="{ success : serviceitem.selected == 1 }" ng-click="toogleServiceStatus(serviceitem.id);" style="cursor: pointer;"> 
+					<i class="fa fa-check-square-o" ng-show="serviceitem.selected == 1" aria-hidden="true">&nbsp;&nbsp;</i>{{serviceitem.name}}</input>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
+<div class="col-sm-4 col-sm-offset-2">
+	<table class="table table-condensed">
+		<tbody>
+			<tr ng-repeat="serviceitem in services.slice(services.length / 2, services.length)">
+				<td ng-class="{ success : serviceitem.selected == 1 }" ng-click="toogleServiceStatus(serviceitem.id);" style="cursor: pointer;"> 
+					<i class="fa fa-check-square-o" ng-show="serviceitem.selected == 1" aria-hidden="true">&nbsp;&nbsp;</i>{{serviceitem.name}}</input>
+				</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

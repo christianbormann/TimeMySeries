@@ -1,0 +1,42 @@
+<div class="col-sm-12">
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>
+					Beginn
+				</th>
+				<th>
+					Ende
+				</th>
+				<th>
+					Titel
+				</th>
+				<th>
+					Episode
+				</th>
+				<th>
+					Sender
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="eventsitem in events | orderObjectBy:'begin'">
+				<td>
+				{{eventsitem.begin * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+			</td>
+			<td>
+				{{eventsitem.end * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+			</td>
+			<td>
+				{{eventsitem.title}}
+			</td>
+			<td>
+				S{{eventsitem.seasonnumber | customNumber:2}}E{{eventsitem.episodenumber | customNumber:2}}&nbsp;-&nbsp;{{eventsitem.episode}}
+			</td>
+			<td>
+				{{eventsitem.program}}
+			</td>
+			</tr>
+		</tbody>
+	</table>
+</div>

@@ -1,0 +1,42 @@
+<div class="col-sm-12">
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>
+					Beginn
+				</th>
+				<th>
+					Ende
+				</th>
+				<th>
+					Titel
+				</th>
+				<th>
+					Beschreibung
+				</th>
+				<th>
+					Sender
+				</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="timeritem in timer">
+				<td>
+				{{timeritem.begin * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+			</td>
+			<td>
+				{{timeritem.end * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+			</td>
+			<td>
+				{{timeritem.name}}
+			</td>
+			<td>
+				{{timeritem.description}}
+			</td>
+			<td>
+				{{timeritem.servicename}}
+			</td>
+			</tr>
+		</tbody>
+	</table>
+</div>
