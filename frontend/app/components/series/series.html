@@ -18,7 +18,7 @@
 					EPG Suche
 				</th>
 				<th class="text-center">
-					L&ouml;schen
+					&nbsp;
 				</th>
 			</tr>
 		</thead>
@@ -39,10 +39,10 @@
 					</select>
 				</td>
 				<td class="text-center" style="vertical-align: middle;"> 
-					<a ng-href="#/events/{{seriesitem.name}}"><i class="fa fa-search" aria-hidden="true" style="cursor: pointer;"></i></a>
+					<a ng-href="#/events/{{seriesitem.name}}/{{seriesitem.fromseason}}"><i class="fa fa-search" aria-hidden="true" style="cursor: pointer;"></i></a>
 				</td>
 				<td class="text-center" style="vertical-align: middle;">
-					<i class="fa fa-trash-o" aria-hidden="true"></i>
+					<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;" ng-click=""></i>
 				</td>
 			</tr>
 		</tbody>

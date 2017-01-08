@@ -26,8 +26,17 @@ db.serialize(function() {
   if(!exists) {
     db.run("CREATE TABLE series (id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name TEXT, fromseason INTEGER DEFAULT 1)");
     db.run("CREATE TABLE services (id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name TEXT, sref TEXT, selected INTEGER DEFAULT 0)");
-    db.run("CREATE TABLE recorded_episodes (id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, name TEXT, series_id INTEGER, season INTEGER, episode INTEGER, FOREIGN KEY(series_id) REFERENCES series(id) ON DELETE CASCADE)");
+    db.run("CREATE TABLE recorded_episodes (id	INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT UNIQUE, seriesname TEXT, series_id INTEGER, episodename TEXT, season INTEGER, episode INTEGER, FOREIGN KEY(series_id) REFERENCES series(id) ON DELETE CASCADE)");
   }
+
+  /* Set foreign key handling for sqlite */
+  db.exec('PRAGMA foreign_keys = ON', function(err) {
+    if (!err) {
+      /* Do nothing */
+    } else {
+      logger.error("Could not set PRAGMA");
+    }
+  });
 });
 
 

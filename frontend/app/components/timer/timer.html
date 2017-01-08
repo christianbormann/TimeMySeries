@@ -17,25 +17,31 @@
 				<th>
 					Sender
 				</th>
+				<th>
+					&nbsp;
+				</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr ng-repeat="timeritem in timer">
 				<td>
-				{{timeritem.begin * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
-			</td>
-			<td>
-				{{timeritem.end * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
-			</td>
-			<td>
-				{{timeritem.name}}
-			</td>
-			<td>
-				{{timeritem.description}}
-			</td>
-			<td>
-				{{timeritem.servicename}}
-			</td>
+					{{timeritem.begin * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+				</td>
+				<td>
+					{{timeritem.end * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+				</td>
+				<td>
+					{{timeritem.name}}
+				</td>
+				<td>
+					{{timeritem.description}}
+				</td>
+				<td>
+					{{timeritem.servicename}}
+				</td>
+				<td class="text-center" style="vertical-align: middle;"> 
+					<i class="fa fa-trash-o" aria-hidden="true" style="cursor: pointer;" ng-click="timerdelete(timeritem)"></i>
+				</td>
 			</tr>
 		</tbody>
 	</table>

@@ -24,9 +24,10 @@ router.use(bodyParser.json());
 
 
 /* Search for events in local epg */
-router.get('/:seriesname', function (req, res) {
+router.get('/:seriesname/:allowedseason?', function (req, res) {
     
     var seriesname = req.params.seriesname;
+    var allowedseason = req.params.allowedseason;
 
     if (seriesname != "") {
 
@@ -62,6 +63,7 @@ router.get('/:seriesname', function (req, res) {
                                 }
                             });
 
+
                             /* Get series info */
                            request({
                                 url: 'http://localhost:3000/api/series/getEpisodes/' + seriesname,
@@ -69,41 +71,76 @@ router.get('/:seriesname', function (req, res) {
                             }, function (errorEpisodes, responseEpisodes, bodyEpisodes) {
                                 
                                 if (bodyServices.message == "ok") {
-
+                                  
                                     var events = [];
                                 
                                     body.events.forEach(function(item) {
-                                        if (item.title == seriesname) {
+                                        if ((item.title.toUpperCase().indexOf((seriesname.toUpperCase() + ' ')) > -1) 
+                                            || (item.title.toUpperCase() == seriesname.toUpperCase()))
+                                        {
                                             var event = {};
+                                            event.seriesname = seriesname;
                                             event.title = item.title;
                                             /* "Der verlorene Sohn, Crime-Serie, USA 2007" */
                                             episodename = item.shortdesc.split(", ")[0];
-                                            event.episode = episodename;
-                                            event.program = item.sname;
-                                            event.begin = item.begin_timestamp;
-                                            event.end = item.begin_timestamp + item.duration_sec;
-                                            event.sref = item.sref;
-
-
-                                            /* Add numbers from internet result */
-                                            var searchresult = bodyEpisodes.episodes.find(function(episodeitem) {
-                                                return episodeitem.name == episodename 
-                                                    || episodeitem.name == episodename.replace(/\s?\((\d*)\)/g, ", Teil $1"); // Trauma (2) --> Trauma, Teil 2
-                                            });
-                                            
-                                            if(searchresult) {
-                                                event.seasonnumber = searchresult.seasonnumber;
-                                                event.episodenumber = searchresult.episodenumber;
-                                            }
-                                            else {
-                                                event.seasonnumber = 0;
-                                                event.episodenumber = 0;
+                                            if (episodename == '') {
+                                                episodename = item.longdesc.split(". ")[0];
                                             }
 
-                                            /* Check if is allowd service */
-                                            if (servicesRef.indexOf(item.sref) > -1) {
-                                                events.push(event);
-                                            }                            
+                                            if (episodename != '') {
+                                                event.episode = episodename;
+                                                event.program = item.sname;
+                                                event.begin = item.begin_timestamp;
+                                                event.end = item.begin_timestamp + item.duration_sec;
+                                                event.sref = item.sref;
+
+                                                /* Check if timestamp is in future */
+                                                if (event.begin >= (Date.now() / 1000 | 0)) {
+                                                    
+                                                    /* Add numbers from internet result */
+                                                    if (bodyEpisodes.episodes) {
+                                                        var searchresult = bodyEpisodes.episodes.find(function(episodeitem) {
+                                                            return episodeitem.name.toUpperCase().indexOf(episodename.toUpperCase()) > -1
+                                                                || episodeitem.name.toUpperCase() == episodename.replace(/\s?\((\d*)\)/g, ", Teil $1").toUpperCase(); // Trauma (2) --> Trauma, Teil 2
+                                                        });
+                                                        if(searchresult) {
+                                                            event.seasonnumber = searchresult.seasonnumber;
+                                                            event.episodenumber = searchresult.episodenumber;
+                                                        }
+                                                        else {
+                                                            event.seasonnumber = 0;
+                                                            event.episodenumber = 0;
+                                                        }
+                                                    }
+                                                    else {
+                                                        event.seasonnumber = 0;
+                                                        event.episodenumber = 0;
+                                                    }
+                                                    
+                                                    /* Check if is allowd service */
+                                                    if (servicesRef.indexOf(item.sref) > -1) {
+                                                        event.allowedservice = true;
+                                                    } 
+                                                    else {
+                                                        event.allowedservice = false;
+                                                    }   
+
+                                                    /* Check if is allowed season */
+                                                    if (allowedseason) {
+                                                        if ((event.seasonnumber >= allowedseason) || (event.seasonnumber == 0)) {
+                                                            event.allowedseason = true;
+                                                        }
+                                                        else {
+                                                            event.allowedseason = false;
+                                                        }
+                                                    }
+                                                    else {
+                                                        event.allowedseason = false;
+                                                    }
+
+                                                    events.push(event);   
+                                                }
+                                            }             
                                         }                       
                                     });
 
@@ -115,9 +152,9 @@ router.get('/:seriesname', function (req, res) {
 
                                 }
                                 else {
-                                     responseObject.message = "Error: Getting episode list with errors.";
-                            responseObject.code = "2";
-                            res.send(responseObject);
+                                    responseObject.message = "Error: Getting episode list with errors.";
+                                    responseObject.code = "2";
+                                    res.send(responseObject);
                                 }
                             });
 
@@ -163,6 +200,5 @@ router.get('/:seriesname', function (req, res) {
 function findEpisode(episodeitem, episodename) { 
     return episodeitem.name == episodename;
 }
-
 
 module.exports = router;

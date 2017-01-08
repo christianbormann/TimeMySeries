@@ -137,8 +137,6 @@ router.post('/save', function(req, res) {
         }
     });
 
-    console.log(queries);
-
     var queryError = false;
     db.serialize(function() {
         queries.forEach(function(query) {
@@ -209,16 +207,33 @@ router.get('/getEpisodes/:seriesname/', function (req, res) {
                 if (!errorSeries && responseSeries.statusCode === 200) {
                 
                     var responseJSON = JSON.parse(bodySeries);
-                    if (responseJSON.data[0].seriesName == seriesname) {
-                            var seriesid = JSON.parse(bodySeries).data[0].id;
+                    
+                    var seriesid = "";
+                    
+                    /* direct comparison */
+                    responseJSON.data.forEach(function(seriesitem) {
+                        if (seriesitem.seriesName.toUpperCase() == seriesname.toUpperCase()) {
+                            var seriesid = seriesitem.id;
                             resolve(seriesid);
+                        }
+                    });
+                    
+                    /* indexOf comparison */
+                    if (seriesid == "") {
+                        responseJSON.data.forEach(function(seriesitem) {
+                            if (seriesitem.seriesName.toUpperCase().indexOf(seriesname.toUpperCase()) > -1) {
+                                var seriesid = seriesitem.id;
+                                resolve(seriesid);
+                            }
+                        });
                     }
-                    else {
+
+                    if (seriesid == "") {
                         reject(Error('Series not found on tvdb.com.'));
                     }
                 }
                 else {
-                    reject(error);
+                    reject(Error('Connection error.'));
                 }
 
             });
@@ -227,13 +242,12 @@ router.get('/getEpisodes/:seriesname/', function (req, res) {
         promiseGetSeriesId.then(function(result) {
             // Got series id from tvdb.com
             var seriesid = result;
+            logger.info(seriesid);
             
             // Get episode list from tvdb.com
             getEpisodes('https://api.thetvdb.com/series/' + seriesid + '/episodes?page=1', token).then(function(result) {
-
                 if (result.pageNumbers > 1) {
                     var episodes = result.episodes;
-
                     var promiseArray = [];
                     for(var i = 2; i <= result.pageNumbers; i++){
                          promiseArray.push(getEpisodes('https://api.thetvdb.com/series/' + seriesid + '/episodes?page=' + i, token));
@@ -241,12 +255,14 @@ router.get('/getEpisodes/:seriesname/', function (req, res) {
 
                     Promise.all(promiseArray).then(function(arrayOfResults) {
                         arrayOfResults.forEach(function(item) {
-                            episodes.push(item.episodes);
+                            episodes = episodes.concat(item.episodes);
                         });
                         responseObject.message = "ok";
                         responseObject.code = "0";
+                        responseObject.count = episodes.length;
                         responseObject.episodes = episodes;
                         res.send(responseObject);
+                        
 
                     }, function() {
                         responseObject.message = "ERROR getting all episode pages from tvb.com.";
@@ -259,16 +275,18 @@ router.get('/getEpisodes/:seriesname/', function (req, res) {
                 else {
                     responseObject.message = "ok";
                     responseObject.code = "0";
+                    responseObject.count = result.episodes.length;
                     responseObject.episodes = result.episodes;
                     res.send(responseObject);
                 }
             }, function(err) {
-                responseObject.message = "ERROR getting episdoe list from tvb.com.";
+                responseObject.message = "ERROR getting episode list from tvb.com.";
                 responseObject.code = "2";
                 res.send(responseObject);
             });
 
         }, function(err) {
+            logger.error(err.message);
             responseObject.message = "ERROR finding series on tvb.com.";
             responseObject.code = "2";
             res.send(responseObject); 
@@ -300,11 +318,13 @@ function getEpisodes(url, token) {
                 returnObject.episodes = [];
 
                 responseJSON.data.forEach(function(item) {
-                    var episode = {};
-                    episode.seasonnumber = item.airedSeason;
-                    episode.episodenumber = item.airedEpisodeNumber;
-                    episode.name = item.episodeName;
-                    returnObject.episodes.push(episode);
+                    if (item.episodeName) {
+                        var episode = {};
+                        episode.seasonnumber = item.airedSeason;
+                        episode.episodenumber = item.airedEpisodeNumber;
+                        episode.name = item.episodeName;
+                        returnObject.episodes.push(episode);
+                    }
                 });
 
                 resolve(returnObject);

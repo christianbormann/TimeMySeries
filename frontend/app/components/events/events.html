@@ -1,4 +1,32 @@
+{{$scope}}
 <div class="col-sm-12">
+	<div class="panel panel-default">
+  		<div class="panel-body">
+			  <div class="col-sm-6">
+				<form class="form-inline">
+
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="showallservices"> Alle Sender
+						</label>
+					</div>
+					&nbsp;&nbsp;
+					<div class="checkbox">
+						<label>
+							<input type="checkbox" ng-model="showallseasons"> Alle Staffeln
+						</label>
+					</div>
+
+				</form>
+			</div>
+			<div class="col-sm-6 text-right">
+				<div ng-show="events.length > 0">{{ (events | filter: showEventFilterServices | filter: showEventFilterSeasons).length }} von {{ events.length }} gefundenen Events</div>
+				<i class="fa fa-spinner fa-spin fa-fw" ng-show="!events"></i>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="col-sm-12" ng-show="events.length > 0">	
 	<table class="table table-condensed table-striped">
 		<thead>
 			<tr>
@@ -17,26 +45,35 @@
 				<th>
 					Sender
 				</th>
+				<th>
+					&nbsp;
+				</th>
 			</tr>
 		</thead>
 		<tbody>
-			<tr ng-repeat="eventsitem in events | orderObjectBy:'begin'">
+			<tr ng-repeat="eventsitem in events | orderObjectBy:'begin' | filter: showEventFilterServices | filter: showEventFilterSeasons">
 				<td>
-				{{eventsitem.begin * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
-			</td>
-			<td>
-				{{eventsitem.end * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
-			</td>
-			<td>
-				{{eventsitem.title}}
-			</td>
-			<td>
-				S{{eventsitem.seasonnumber | customNumber:2}}E{{eventsitem.episodenumber | customNumber:2}}&nbsp;-&nbsp;{{eventsitem.episode}}
-			</td>
-			<td>
-				{{eventsitem.program}}
-			</td>
+					{{eventsitem.begin * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+				</td>
+				<td>
+					{{eventsitem.end * 1000 | date:'dd.MM.yyyy HH:mm:ss'}}
+				</td>
+				<td>
+					{{eventsitem.title}}
+				</td>
+				<td>
+					S{{eventsitem.seasonnumber | customNumber:2}}E{{eventsitem.episodenumber | customNumber:2}}&nbsp;-&nbsp;{{eventsitem.episode}}&nbsp;&nbsp;<i class="fa fa-television text-danger" ng-show="eventsitem.allowedseason == false" aria-hidden="true" title="Staffel nicht f&uuml;r Aufnahmen ausgew&auml;hlt."></i>
+				</td>
+				<td>
+					{{eventsitem.program}}&nbsp;&nbsp;<i class="fa fa-times text-danger" ng-show="eventsitem.allowedservice == false" aria-hidden="true" title="Sender nicht f&uuml;r Aufnahmen ausgew&auml;hlt."></i>
+				</td>
+				<td class="text-center" style="vertical-align: middle;"> 
+					<i class="fa fa-clock-o" aria-hidden="true" style="cursor: pointer;" ng-click="timeradd(eventsitem)"></i>
+				</td>
 			</tr>
 		</tbody>
 	</table>
 </div>
+<div class="col-sm-12" ng-show="events.length == 0">
+	Keine Events gefunden.
+</div>	

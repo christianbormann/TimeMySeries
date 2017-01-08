@@ -24,7 +24,7 @@ angular
 		})
 
 		.state('events', {
-			url: '/events/:seriesName',
+			url: '/events/:seriesName/:fromSeason',
 			templateUrl: 'app/components/events/events.html',
 			controller: 'eventsController'
 		});
